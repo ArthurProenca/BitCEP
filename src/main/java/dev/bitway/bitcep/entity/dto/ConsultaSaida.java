@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.lang.Nullable;
 
 import java.io.Serializable;
 
@@ -24,5 +25,7 @@ public class ConsultaSaida implements Serializable {
     private String gia;
     private String ddd;
     private String siafi;
+    @Nullable
+    private String categoria;
 
 }

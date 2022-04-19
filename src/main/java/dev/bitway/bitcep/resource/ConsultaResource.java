@@ -21,7 +21,8 @@ public class ConsultaResource {
     public ResponseEntity<ConsultaSaida> consultaSaidaResponseEntity(@RequestBody ConsultaEntrada consultaEntrada) {
         log.info("Consultando CEP: {}", consultaEntrada.getCep());
         consultaService.consultaCep(consultaEntrada);
-        ResponseEntity<ConsultaSaida> responseEntity = consultaService.consultaCep(consultaEntrada);
+        ConsultaSaida consultaSaida = consultaService.consultaCep(consultaEntrada);
+        ResponseEntity<ConsultaSaida> responseEntity = ResponseEntity.ok(consultaSaida);
         log.info("Status da consulta: {}", responseEntity.getStatusCode());
         return responseEntity;
     }
