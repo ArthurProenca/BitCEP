@@ -30,23 +30,22 @@ public class ConsultaService {
     }
 
     public ConsultaSaida trataRetorno(ConsultaSaida consultaSaida) {
-        if(consultaSaida.getLogradouro() == "") {
+        if (consultaSaida.getLogradouro() == "") {
             consultaSaida.setLogradouro("N/A");
         }
-        if(consultaSaida.getBairro() == "") {
+        if (consultaSaida.getBairro() == "") {
             consultaSaida.setBairro("N/A");
         }
-        if(consultaSaida.getComplemento() == "") {
+        if (consultaSaida.getComplemento() == "") {
             consultaSaida.setComplemento("N/A");
         }
-        if(consultaSaida.getGia() == "") {
+        if (consultaSaida.getGia() == "") {
             consultaSaida.setGia("N/A");
         }
         return consultaSaida;
     }
 
     public ConsultaSaida consultaCep(ConsultaEntrada consultaEntrada) {
-
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<ConsultaSaida> response = restTemplate.getForEntity("https://viacep.com.br/ws/" +
                 consultaEntrada.getCep() + "/json/", ConsultaSaida.class);
