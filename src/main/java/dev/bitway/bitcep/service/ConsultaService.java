@@ -1,6 +1,5 @@
 package dev.bitway.bitcep.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
 import dev.bitway.bitcep.entity.dto.ConsultaEntrada;
 import dev.bitway.bitcep.entity.dto.ConsultaSaida;
@@ -64,7 +63,7 @@ public class ConsultaService {
         return trataRetorno(consultaSaida);
     }
 
-    public SearchResponseSoap consultaCepSoap(ConsultaEntrada consultaEntrada)  {
+    public SearchResponseSoap consultaCepSoap(ConsultaEntrada consultaEntrada) {
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> response = restTemplate.postForEntity("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", soapMessageCep(consultaEntrada.getCep()), String.class);
         String res = Objects.requireNonNull(response.getBody()).replace("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ns2:consultaCEPResponse xmlns:ns2=\"http://cliente.bean.master.sigep.bsb.correios.com.br/\"><return>", "");
@@ -83,11 +82,12 @@ public class ConsultaService {
                 data + "</NumberOfDays></cli:iNumberOfDays_INT01></soapenv:Body></soapenv:Envelope>";
     }
 
-    public String searchProtocol(SearchProtocolRequest protocolo) throws JsonProcessingException {
+    public String searchProtocol(SearchProtocolRequest protocolo) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8081/body", soapMessageProtocol(protocolo.getDays()), String.class);
+        ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8081/body",
+                soapMessageProtocol(protocolo.getDays()), String.class);
         JSONObject object = XML.toJSONObject(Objects.requireNonNull(response.getBody()));
-           String res = object.toString();
+        String res = object.toString();
         int inicio = res.indexOf("[");
         int fim = res.indexOf("]");
         return res.substring(inicio, fim + 1);

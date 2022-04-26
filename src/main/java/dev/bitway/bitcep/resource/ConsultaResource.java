@@ -1,15 +1,14 @@
 package dev.bitway.bitcep.resource;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import dev.bitway.bitcep.entity.dto.*;
+import dev.bitway.bitcep.entity.dto.ConsultaEntrada;
+import dev.bitway.bitcep.entity.dto.ConsultaSaida;
+import dev.bitway.bitcep.entity.dto.SearchProtocolRequest;
+import dev.bitway.bitcep.entity.dto.SearchResponseSoap;
 import dev.bitway.bitcep.service.ConsultaService;
 import lombok.extern.log4j.Log4j2;
-import org.apache.tomcat.util.net.openssl.ciphers.Protocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import javax.xml.bind.JAXBException;
 
 @RestController
 @RequestMapping("/bitway/consulta")
@@ -29,8 +28,9 @@ public class ConsultaResource {
         log.info("Status da consulta: {}", responseEntity.getStatusCode());
         return responseEntity;
     }
+
     @PostMapping("/cep/soap")
-    public ResponseEntity<SearchResponseSoap> searchSaidaResponseEntitySoap(@RequestBody ConsultaEntrada consultaEntrada) throws JAXBException {
+    public ResponseEntity<SearchResponseSoap> searchSaidaResponseEntitySoap(@RequestBody ConsultaEntrada consultaEntrada) {
         log.info("Searching CEP by SOAP request: {}", consultaEntrada.getCep());
         SearchResponseSoap searchResponseSoap = consultaService.consultaCepSoap(consultaEntrada);
         ResponseEntity<SearchResponseSoap> responseEntity = ResponseEntity.ok(searchResponseSoap);
@@ -40,7 +40,7 @@ public class ConsultaResource {
 
 
     @PostMapping("/protocol")
-    public ResponseEntity<String> searchProtocol(@RequestBody SearchProtocolRequest protocolRequest) throws JsonProcessingException {
+    public ResponseEntity<String> searchProtocol(@RequestBody SearchProtocolRequest protocolRequest) {
         log.info("Searching protocol by days: {}", protocolRequest.getDays());
         String protocol = consultaService.searchProtocol(protocolRequest);
         ResponseEntity<String> responseEntity = ResponseEntity.ok(protocol);
