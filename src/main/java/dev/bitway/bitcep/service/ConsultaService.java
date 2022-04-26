@@ -1,10 +1,15 @@
 package dev.bitway.bitcep.service;
 
+import com.google.gson.Gson;
 import dev.bitway.bitcep.entity.dto.ConsultaEntrada;
 import dev.bitway.bitcep.entity.dto.ConsultaSaida;
+import dev.bitway.bitcep.entity.dto.SearchResponseSoap;
+import org.json.JSONObject;
+import org.json.XML;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import java.util.Objects;
 
 @Service
 public class ConsultaService {
@@ -54,5 +59,21 @@ public class ConsultaService {
         consultaSaida.setCategoria(spliterator(consultaSaida.getCep()));
 
         return trataRetorno(consultaSaida);
+    }
+
+    public SearchResponseSoap consultaCepSoap(ConsultaEntrada consultaEntrada) {
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity("https://apps.correios.com.br/SigepMasterJPA/AtendeClienteService/AtendeCliente?wsdl", soapMessage(consultaEntrada.getCep()), String.class);
+        String teste = Objects.requireNonNull(response.getBody()).replace("<soap:Envelope xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\"><soap:Body><ns2:consultaCEPResponse xmlns:ns2=\"http://cliente.bean.master.sigep.bsb.correios.com.br/\"><return>", "");
+        String teste2 = teste.replace("</return></ns2:consultaCEPResponse></soap:Body></soap:Envelope>", "");
+        JSONObject paisesJson = XML.toJSONObject(teste2);
+        return new Gson().fromJson(String.valueOf(paisesJson), SearchResponseSoap.class);
+    }
+
+    private String soapMessage(String cep) {
+        return "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:cli=\"http://cliente.bean.master.sigep.bsb.correios.com.br/\"><soapenv:Header/><soapenv:Body><cli:consultaCEP><cep>" +
+                cep +
+                "</cep></cli:consultaCEP></soapenv:Body></soapenv:Envelope>";
     }
 }

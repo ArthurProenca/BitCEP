@@ -2,6 +2,7 @@ package dev.bitway.bitcep.resource;
 
 import dev.bitway.bitcep.entity.dto.ConsultaEntrada;
 import dev.bitway.bitcep.entity.dto.ConsultaSaida;
+import dev.bitway.bitcep.entity.dto.SearchResponseSoap;
 import dev.bitway.bitcep.service.ConsultaService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,4 +27,13 @@ public class ConsultaResource {
         log.info("Status da consulta: {}", responseEntity.getStatusCode());
         return responseEntity;
     }
+    @PostMapping("/cep/soap")
+    public ResponseEntity<SearchResponseSoap> consultaSaidaResponseEntitySoap(@RequestBody ConsultaEntrada consultaEntrada) {
+        log.info("Searching CEP by SOAP request: {}", consultaEntrada.getCep());
+        SearchResponseSoap consultaSaida = consultaService.consultaCepSoap(consultaEntrada);
+        ResponseEntity<SearchResponseSoap> responseEntity = ResponseEntity.ok(consultaSaida);
+        log.info("Status Code: {}", responseEntity.getStatusCode());
+        return responseEntity;
+    }
+
 }
