@@ -1,4 +1,4 @@
-package dev.bitway.bitcep.entity.dto;
+package dev.bitway.bitcep.entity.dto.soap;
 
 import lombok.*;
 
@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Setter
 @ToString
 
-public class SearchResponseSoap implements Serializable {
+public class BuscaSaidaSoap implements Serializable {
     private String cep;
     private String cidade;
     private String complemento2;

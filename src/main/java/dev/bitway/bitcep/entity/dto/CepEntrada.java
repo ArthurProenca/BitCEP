@@ -11,8 +11,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+public class CepEntrada implements Serializable{
+    private String cep;
 
-
-public class SearchProtocolRequest implements Serializable {
-    private String days;
 }

@@ -1,4 +1,4 @@
-package dev.bitway.bitcep.entity.dto;
+package dev.bitway.bitcep.entity.dto.soap;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ConsultaEntrada  implements Serializable{
-    private String cep;
 
+
+public class BuscaProtocoloEntrada implements Serializable {
+    private String days;
 }

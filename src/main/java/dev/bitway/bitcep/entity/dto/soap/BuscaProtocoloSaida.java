@@ -1,12 +1,11 @@
-package dev.bitway.bitcep.entity.dto;
+package dev.bitway.bitcep.entity.dto.soap;
 
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.List;
 
 @Data
-public class SearchProtocolResponse implements Serializable {
+public class BuscaProtocoloSaida implements Serializable {
     public String sdvr01;
     public String sdnxtr;
     public String id;
