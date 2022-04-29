@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @Log4j2
@@ -35,6 +37,16 @@ public class AwesomeApiConsultaService {
         OpenCepConsultaSaida openCepConsultaSaida = new OpenCepConsultaSaida();
         AwesomeApiConsultaSaida awesomeApiConsultaSaida = new AwesomeApiConsultaSaida();
         int status = 0;
+
+
+        if(cepEntrada.getCep().isBlank()) {
+            return ResponseEntity.badRequest().body("{\"erro\"" + ":" + "\"CEP não encontrado\"}");
+        } else if (cepEntrada.getCep().length() != 8) {
+            return ResponseEntity.badRequest().body("{\"erro\"" + ":" + "\"CEP inválido\"}");
+        } else if(cepEntrada.getCep().matches("[A-Z][a-z]*")) {
+            return ResponseEntity.badRequest().body("{\"erro\"" + ":" + "\"CEP é composto por letras\"}");
+        }
+
         try {
             ResponseEntity<Object> responseEntity = utils.getHttp("https://cep.awesomeapi.com" +
                     ".br/json/" + cepEntrada.getCep());
@@ -56,20 +68,21 @@ public class AwesomeApiConsultaService {
                 apiCepConsultaSaida = cepConsultaService.apiCepConsultaSaida(cepEntrada);
             }
         }
+
         if (awesomeApiConsultaSaida.getCep() != null && status != 0) {
             log.info("AwesomeApi utilizado - CEP: " + awesomeApiConsultaSaida.getCep() + " - HTTP STATUS - " + status);
             return ResponseEntity.status(200).body(awesomeApiCepUtils.toSingleObject(awesomeApiConsultaSaida));
-        } else if (viaCepConsultaSaida.getCep() != null) {
+        } else if (viaCepConsultaSaida.getCep() != null && viaCepConsultaSaida.getErro() == null) {
             log.info("ViaCep utilizado - CEP: " + viaCepConsultaSaida.getCep() + " - HTTP STATUS - " + status);
             return ResponseEntity.status(200).body(viaCepUtils.toSingleObject(viaCepConsultaSaida));
-        } else if (openCepConsultaSaida.getCep() != null) {
+        } else if (openCepConsultaSaida.getCep() != null && openCepConsultaSaida.getCep() == null) {
             log.info("OpenCep utilizado - CEP: " + openCepConsultaSaida.getCep() + " - HTTP STATUS - " + status);
             return ResponseEntity.status(200).body(openCepUtils.toSingleObject(openCepConsultaSaida));
-        } else if (apiCepConsultaSaida.getCode() != null) {
+        } else if (apiCepConsultaSaida.getCode() != null && apiCepConsultaSaida.getStatus() == 200) {
             log.info("ApiCep utilizado - CEP: " + apiCepConsultaSaida.getCode() + " - HTTP STATUS - " + status);
             apiCepConsultaSaida.setOrigin("ApiCep");
             return ResponseEntity.status(200).body(apiCepUtils.toSingleObject(apiCepConsultaSaida));
         }
-        return ResponseEntity.status(500).body("{\"service\"" + ":" + "\"error\"}");
+        return ResponseEntity.status(400).body("{\"erro\"" + ":" + "\"CEP não encontrado\"}");
     }
 }

@@ -25,20 +25,6 @@ public class ApiCepConsultaSaida implements Serializable {
     private String category;
     @Nullable
     private String origin;
-
-    @Override
-    public String toString() {
-        return "ApiCepConsultaSaida{" +
-                "status=" + status +
-                ", ok=" + ok +
-                ", code='" + code + '\'' +
-                ", state='" + state + '\'' +
-                ", city='" + city + '\'' +
-                ", district='" + district + '\'' +
-                ", address='" + address + '\'' +
-                ", statusText='" + statusText + '\'' +
-                ", category='" + category + '\'' +
-                ", origin='" + origin + '\'' +
-                '}';
-    }
+    @Nullable
+    private String message;
 }

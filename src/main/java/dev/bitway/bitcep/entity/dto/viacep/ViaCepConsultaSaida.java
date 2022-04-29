@@ -29,22 +29,6 @@ public class ViaCepConsultaSaida implements Serializable {
     private String categoria;
     @Nullable
     private String origem;
-
-    @Override
-    public String toString() {
-        return "ViaCepConsultaSaida{" +
-                "cep='" + cep + '\'' +
-                ", logradouro='" + logradouro + '\'' +
-                ", complemento='" + complemento + '\'' +
-                ", bairro='" + bairro + '\'' +
-                ", localidade='" + localidade + '\'' +
-                ", uf='" + uf + '\'' +
-                ", ibge='" + ibge + '\'' +
-                ", gia='" + gia + '\'' +
-                ", ddd='" + ddd + '\'' +
-                ", siafi='" + siafi + '\'' +
-                ", categoria='" + categoria + '\'' +
-                ", origem='" + origem + '\'' +
-                '}';
-    }
+    @Nullable
+    private String erro;
 }

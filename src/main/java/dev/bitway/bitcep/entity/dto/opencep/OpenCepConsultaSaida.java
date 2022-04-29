@@ -25,6 +25,8 @@ public class OpenCepConsultaSaida implements Serializable {
     private String categoria;
     @Nullable
     private String origem;
+    @Nullable
+    private String erro;
 }
 
 
