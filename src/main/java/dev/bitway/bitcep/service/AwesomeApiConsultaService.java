@@ -1,5 +1,7 @@
 package dev.bitway.bitcep.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import dev.bitway.bitcep.entity.dto.CepEntrada;
 import dev.bitway.bitcep.entity.dto.apicep.ApiCepConsultaSaida;
 import dev.bitway.bitcep.entity.dto.awesomeapi.AwesomeApiConsultaSaida;
@@ -11,6 +13,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.lang.reflect.Type;
 
 @Service
 @Log4j2
@@ -24,19 +28,20 @@ public class AwesomeApiConsultaService {
     private AwesomeApiCepUtils awesomeApiCepUtils = new AwesomeApiCepUtils();
     private Utils utils = new Utils();
     private RestTemplate restTemplate = new RestTemplate();
-    private ViaCepConsultaSaida viaCepConsultaSaida = new ViaCepConsultaSaida();
-    private ApiCepConsultaSaida apiCepConsultaSaida = new ApiCepConsultaSaida();
-    private OpenCepConsultaSaida openCepConsultaSaida = new OpenCepConsultaSaida();
-    private AwesomeApiConsultaSaida awesomeApiConsultaSaida = new AwesomeApiConsultaSaida();
-
 
     public ResponseEntity<?> consultaCep(CepEntrada cepEntrada) {
+        ViaCepConsultaSaida viaCepConsultaSaida = new ViaCepConsultaSaida();
+        ApiCepConsultaSaida apiCepConsultaSaida = new ApiCepConsultaSaida();
+        OpenCepConsultaSaida openCepConsultaSaida = new OpenCepConsultaSaida();
+        AwesomeApiConsultaSaida awesomeApiConsultaSaida = new AwesomeApiConsultaSaida();
         int status = 0;
         try {
-            ResponseEntity<AwesomeApiConsultaSaida> response = restTemplate.getForEntity("https://cep.awesomeapi.com.br/json/" +
-                    cepEntrada.getCep(), AwesomeApiConsultaSaida.class);
-            awesomeApiConsultaSaida = response.getBody();
-            status = response.getStatusCodeValue();
+            ResponseEntity<Object> responseEntity = utils.getHttp("https://cep.awesomeapi.com" +
+                    ".br/json/" + cepEntrada.getCep());
+            status = responseEntity.getStatusCodeValue();
+            ObjectMapper mapper = new ObjectMapper();
+            awesomeApiConsultaSaida = mapper.convertValue(responseEntity.getBody(), new TypeReference<AwesomeApiConsultaSaida>() {
+            });
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -55,13 +60,13 @@ public class AwesomeApiConsultaService {
             log.info("AwesomeApi utilizado - CEP: " + awesomeApiConsultaSaida.getCep() + " - HTTP STATUS - " + status);
             return ResponseEntity.status(200).body(awesomeApiCepUtils.toSingleObject(awesomeApiConsultaSaida));
         } else if (viaCepConsultaSaida.getCep() != null) {
-            log.info("ViaCep utilizado - CEP: " + awesomeApiConsultaSaida.getCep() + " - HTTP STATUS - " + status);
+            log.info("ViaCep utilizado - CEP: " + viaCepConsultaSaida.getCep() + " - HTTP STATUS - " + status);
             return ResponseEntity.status(200).body(viaCepUtils.toSingleObject(viaCepConsultaSaida));
         } else if (openCepConsultaSaida.getCep() != null) {
-            log.info("OpenCep utilizado - CEP: " + awesomeApiConsultaSaida.getCep() + " - HTTP STATUS - " + status);
+            log.info("OpenCep utilizado - CEP: " + openCepConsultaSaida.getCep() + " - HTTP STATUS - " + status);
             return ResponseEntity.status(200).body(openCepUtils.toSingleObject(openCepConsultaSaida));
         } else if (apiCepConsultaSaida.getCode() != null) {
-            log.info("ApiCep utilizado - CEP: " + awesomeApiConsultaSaida.getCep() + " - HTTP STATUS - " + status);
+            log.info("ApiCep utilizado - CEP: " + apiCepConsultaSaida.getCode() + " - HTTP STATUS - " + status);
             apiCepConsultaSaida.setOrigin("ApiCep");
             return ResponseEntity.status(200).body(apiCepUtils.toSingleObject(apiCepConsultaSaida));
         }

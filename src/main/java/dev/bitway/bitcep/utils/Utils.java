@@ -6,8 +6,16 @@ import dev.bitway.bitcep.entity.dto.awesomeapi.AwesomeApiConsultaSaida;
 import dev.bitway.bitcep.entity.dto.opencep.OpenCepConsultaSaida;
 import dev.bitway.bitcep.entity.dto.viacep.ViaCepConsultaSaida;
 import dev.bitway.bitcep.service.callbacks.CepConsultaService;
+import org.json.JSONObject;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 public class Utils {
+    private RestTemplate restTemplate = new RestTemplate();
+    public ResponseEntity<Object> getHttp(String url) {
+        ResponseEntity<Object> response = restTemplate.getForEntity(url, Object.class);
+        return response;
+    }
 
     public String spliterator(String sufix) {
         String temp = sufix.substring(sufix.length() - 3);
