@@ -63,9 +63,6 @@ public class CepConsultaService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        //openCepConsultaSaida.setCategoria(viaCepUtils.spliterator(openCepConsultaSaida.getCep()));
-
         return openCepConsultaSaida;
     }
 
