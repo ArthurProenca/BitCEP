@@ -24,8 +24,4 @@ public class AwesomeApiConsultaSaida implements Serializable {
     private String city;
     private String city_ibge;
     private String ddd;
-    @Nullable
-    private String category;
-    @Nullable
-    private String origin;
 }
